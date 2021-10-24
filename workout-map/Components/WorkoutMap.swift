@@ -22,23 +22,27 @@ struct WorkoutMap: UIViewRepresentable {
     }
     
     func updateUIView(_ map: MKMapView, context: Context) {
-        map.removeOverlays(map.overlays)
         map.delegate = context.coordinator
         
-        workouts
-            .map { workout in
-                MKPolyline(
-                    coordinates: workout.route.map { location in
-                        location.coordinate
-                    },
-                    count: workout.route.count
-                )
+        // Clear all drawn lines before drawing
+        map.removeOverlays(
+            map.overlays.filter { overlay in
+                overlay is MKMultiPolyline
             }
-            .forEach { line in
-                logger.log("Drawing line with \(line.pointCount) points!")
-                
-                map.addOverlay(line)
-            }
+        )
+        
+        let workoutRoutes = MKMultiPolyline(
+            workouts
+                .map { workout in
+                    MKPolyline(
+                        coordinates: workout.route.map { location in
+                            location.coordinate
+                        },
+                        count: workout.route.count
+                    )
+                }
+        )
+        map.addOverlay(workoutRoutes)
     }
     
     func makeCoordinator() -> WorkoutMapCoordinator {
@@ -56,15 +60,17 @@ class WorkoutMapCoordinator: NSObject, MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        let renderer = MKPolylineRenderer(overlay: overlay)
-        
-        if (overlay is MKPolyline) {
+        if let multiPolyline = overlay as? MKMultiPolyline {
+            let renderer = MKMultiPolylineRenderer(multiPolyline: multiPolyline)
+            
             renderer.strokeColor = .red
             renderer.lineWidth = 5.0
             renderer.alpha = 1.0
+            
+            return renderer
         }
         
-        return renderer
+        return MKOverlayRenderer(overlay: overlay)
     }
 }
 
