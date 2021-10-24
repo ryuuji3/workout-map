@@ -27,12 +27,37 @@ struct WorkoutMap: UIViewRepresentable {
         // Clear all drawn lines before drawing
         map.removeOverlays(
             map.overlays.filter { overlay in
-                overlay is MKMultiPolyline
+                overlay is RoutePolylines
             }
         )
         
-        let workoutRoutes = MKMultiPolyline(
-            workouts
+        let walkingRoutes = workouts
+            .filter { workout in
+                workout.type == .walking
+            }
+        let runningRoutes = workouts
+            .filter { workout in
+                workout.type == .running
+            }
+        let cyclingRoutes = workouts
+            .filter { workout in
+                workout.type == .cycling
+            }
+        
+        map.addOverlay(
+            createPolylines(for: walkingRoutes, color: WorkoutType.walking.color)
+        )
+        map.addOverlay(
+            createPolylines(for: runningRoutes, color: WorkoutType.running.color)
+        )
+        map.addOverlay(
+            createPolylines(for: cyclingRoutes, color: WorkoutType.cycling.color)
+        )
+    }
+    
+    private func createPolylines(for workouts: [Workout], color: Color) -> RoutePolylines {
+        RoutePolylines(
+            path: workouts
                 .map { workout in
                     MKPolyline(
                         coordinates: workout.route.map { location in
@@ -40,9 +65,9 @@ struct WorkoutMap: UIViewRepresentable {
                         },
                         count: workout.route.count
                     )
-                }
+                },
+            color: color
         )
-        map.addOverlay(workoutRoutes)
     }
     
     func makeCoordinator() -> WorkoutMapCoordinator {
@@ -60,17 +85,27 @@ class WorkoutMapCoordinator: NSObject, MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        if let multiPolyline = overlay as? MKMultiPolyline {
+        if let multiPolyline = overlay as? RoutePolylines {
             let renderer = MKMultiPolylineRenderer(multiPolyline: multiPolyline)
             
-            renderer.strokeColor = .red
-            renderer.lineWidth = 5.0
+            renderer.strokeColor = UIColor(multiPolyline.color)
+            renderer.lineWidth = 1.0
             renderer.alpha = 1.0
             
             return renderer
         }
         
         return MKOverlayRenderer(overlay: overlay)
+    }
+}
+
+class RoutePolylines: MKMultiPolyline {
+    var color: Color = .black
+    
+    init(path: [MKPolyline], color: Color = .black) {
+        super.init(path)
+        
+        self.color = color
     }
 }
 

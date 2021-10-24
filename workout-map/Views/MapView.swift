@@ -4,8 +4,8 @@ import HealthKit
 
 struct MapView: View {
     @EnvironmentObject var workoutManager: WorkoutManager
-
-    @State private var selectedWorkoutTypes: Set<HKWorkoutActivityType> = [.cycling, .walking]
+   
+    @State private var selectedWorkoutTypes: Set<WorkoutType> = [.cycling, .walking, .running]
     @State private var currentRegion = MKCoordinateRegion(
         center: CLLocationCoordinate2D(
             latitude: 44.643324,
@@ -39,6 +39,11 @@ struct MapView: View {
                     progress: progress
                 )
             }
+            
+            VStack {
+                Spacer()
+                WorkoutTypeLegend(loadedWorkoutTypes: Array(selectedWorkoutTypes))
+            }
         }
     }
 }
@@ -47,24 +52,5 @@ struct MapView_Previews: PreviewProvider {
     static var previews: some View {
         MapView()
             .environmentObject(WorkoutManager())
-    }
-}
-
-extension HKWorkoutActivityType: Identifiable, Hashable {
-    public var id: UInt {
-        rawValue
-    }
-
-    var name: String {
-        switch self {
-        case .running:
-            return "Run"
-        case .cycling:
-            return "Bike"
-        case .walking:
-            return "Walk"
-        default:
-            return ""
-        }
     }
 }

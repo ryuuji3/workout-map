@@ -13,14 +13,14 @@ public class Workout: Identifiable {
     public var id: UUID
     public var startDate: Date
     public var endDate: Date
-    public var type: HKWorkoutActivityType
+    public var type: WorkoutType
     public var route: [CLLocation]
     
     init(
         id: UUID,
         startDate: Date,
         endDate: Date,
-        type: HKWorkoutActivityType,
+        type: WorkoutType,
         route: [CLLocation]
     ) {
         self.id = id

@@ -21,14 +21,14 @@ class WorkoutManager: NSObject, ObservableObject {
         ]
     }
     
-    static var workoutTypes: Set<HKWorkoutActivityType> = [.cycling, .running, .walking]
+    static var workoutTypes: Set<WorkoutType> = [.cycling, .running, .walking]
     
     @Published var totalWorkoutsCount: Int = 0
     @Published var retrievedWorkouts: [Workout] = []
     
     private var cancellables: Set<AnyCancellable> = []
     
-    func getWorkouts(requestedTypes: Set<HKWorkoutActivityType> = workoutTypes) {
+    func getWorkouts(requestedTypes: Set<WorkoutType> = workoutTypes) {
         let rawWorkouts = self
             .requestAuthorization()
             .flatMap { isAuthorized -> AnyPublisher<[HKWorkout], Error> in
@@ -71,11 +71,11 @@ class WorkoutManager: NSObject, ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func workouts(requestedTypes: Set<HKWorkoutActivityType>) -> PassthroughSubject<HKWorkout, Error> {
+    private func workouts(requestedTypes: Set<WorkoutType>) -> PassthroughSubject<HKWorkout, Error> {
         let subject = PassthroughSubject<HKWorkout, Error>()
         
         let workoutByType = NSCompoundPredicate(
-            orPredicateWithSubpredicates: requestedTypes.map { HKQuery.predicateForWorkouts(with: $0) }
+            orPredicateWithSubpredicates: requestedTypes.map { HKQuery.predicateForWorkouts(with: HKWorkoutActivityType($0)) }
         )
         let query = HKSampleQuery(
             sampleType: HKSampleType.workoutType(),
@@ -146,7 +146,7 @@ class WorkoutManager: NSObject, ObservableObject {
                     id: workout.uuid,
                     startDate: workout.startDate,
                     endDate: workout.endDate,
-                    type: workout.workoutActivityType,
+                    type: WorkoutType(workout.workoutActivityType),
                     route: locations
                 )
             }
