@@ -4,7 +4,7 @@ import CoreLocation
 import os
 import Combine
 
-let logger = Logger(
+private let logger = Logger(
     subsystem: "ryuuji3.workout-map.WorkoutManager",
     category: "WorkoutManager"
 )
@@ -58,7 +58,7 @@ class WorkoutManager: NSObject, ObservableObject {
         rawWorkouts
             .flatMap { workouts in
                 Publishers.MergeMany(
-                    workouts.map { $0.workoutWithDetails }
+                    workouts.map { self.details(workout: $0) }
                 ).collect(15) // batch updates
             }
             .receive(on: DispatchQueue.main)
@@ -125,13 +125,11 @@ class WorkoutManager: NSObject, ObservableObject {
             }
         }.eraseToAnyPublisher()
     }
-}
-
-extension HKWorkout {
-    public var workoutWithDetails: AnyPublisher<Workout, Error> {
-        return routes
+    
+    private func details(workout: HKWorkout) -> AnyPublisher<Workout, Error> {
+        return self.routes(workout: workout)
             .flatMap { route in
-                route.locations
+                self.locations(route: route)
             }
             .replaceEmpty(with: [])
             .scan([]) { existingLocations, currentLocation in
@@ -145,19 +143,19 @@ extension HKWorkout {
             }
             .map { locations -> Workout in
                 Workout(
-                    id: self.uuid,
-                    startDate: self.startDate,
-                    endDate: self.endDate,
-                    type: self.workoutActivityType,
+                    id: workout.uuid,
+                    startDate: workout.startDate,
+                    endDate: workout.endDate,
+                    type: workout.workoutActivityType,
                     route: locations
                 )
             }
             .eraseToAnyPublisher()
     }
     
-    private var routes: PassthroughSubject<HKWorkoutRoute, Error> {
+    private func routes(workout: HKWorkout) -> PassthroughSubject<HKWorkoutRoute, Error> {
         let subject = PassthroughSubject<HKWorkoutRoute, Error>()
-        let predicate = HKQuery.predicateForObjects(from: self)
+        let predicate = HKQuery.predicateForObjects(from: workout)
         
         // Needs to be anchored because data can change
         let query = HKAnchoredObjectQuery(
@@ -187,18 +185,16 @@ extension HKWorkout {
         }
         
         logger.info("Querying workout routes...")
-        HKHealthStore().execute(query)
+        self.healthStore.execute(query)
         
         return subject
     }
-}
-
-private extension HKWorkoutRoute {
-    var locations: PassthroughSubject<[CLLocation], Error> {
+    
+    private func locations(route: HKWorkoutRoute) -> PassthroughSubject<[CLLocation], Error> {
         let subject = PassthroughSubject<[CLLocation], Error>()
         var results: [CLLocation] = []
         
-        let query = HKWorkoutRouteQuery(route: self) { (routeQuery, locationsOrNil, done, errorOrNil) in
+        let query = HKWorkoutRouteQuery(route: route) { (routeQuery, locationsOrNil, done, errorOrNil) in
             if let error = errorOrNil {
                 logger.error("Error while querying route: \(error.localizedDescription)")
                 return subject.send(completion: .failure(error))
@@ -222,7 +218,7 @@ private extension HKWorkoutRoute {
         }
         
         logger.info("Querying route locations...")
-        HKHealthStore().execute(query)
+        self.healthStore.execute(query)
         
         return subject
     }
