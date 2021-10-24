@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct workout_mapApp: App {
+    @StateObject private var workoutManager = WorkoutManager()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Group {
+                MapView()
+            }.environmentObject(workoutManager)
         }
     }
 }
