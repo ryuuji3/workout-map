@@ -21,22 +21,25 @@ struct MapView: View {
         let workouts = workoutManager.retrievedWorkouts
         let progress: Double = Double(workouts.count) / Double(workoutManager.totalWorkoutsCount)
         
-        WorkoutMap(
-            currentRegion: $currentRegion,
-            workouts: workouts
-        )
-            .edgesIgnoringSafeArea(.all)
-            .onAppear {
-                workoutManager.getWorkouts(
-                    requestedTypes: selectedWorkoutTypes
+        ZStack {
+            WorkoutMap(
+                currentRegion: $currentRegion,
+                workouts: workouts
+            )
+                .edgesIgnoringSafeArea(.all)
+                .onAppear {
+                    workoutManager.getWorkouts(
+                        requestedTypes: selectedWorkoutTypes
+                    )
+                }
+            
+            // TODO: Add animation 
+            if progress < 1 {
+                LoadingSpinner(
+                    progress: progress
                 )
             }
-            .overlay(
-                ProgressView("Loaded workouts: (\(workouts.count)/\(workoutManager.totalWorkoutsCount))", value: progress)
-                    .progressViewStyle(.linear)
-                    .padding(),
-                alignment: .bottom
-            )
+        }
     }
 }
 
