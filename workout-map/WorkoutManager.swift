@@ -29,7 +29,10 @@ class WorkoutManager: NSObject, ObservableObject {
     private var cancellables: Set<AnyCancellable> = []
     
     func getWorkouts(requestedTypes: Set<WorkoutType> = workoutTypes) {
-        let rawWorkouts = self
+        let unprocessedWorkouts = PassthroughSubject<HKWorkout, Never>()
+        
+        // Immediately load workouts and queue for processing
+        self
             .requestAuthorization()
             .flatMap { isAuthorized -> AnyPublisher<[HKWorkout], Error> in
                 guard isAuthorized else {
@@ -42,30 +45,29 @@ class WorkoutManager: NSObject, ObservableObject {
                     .collect() // Fetch all workouts so that we can batch fetching routes + locations
                     .eraseToAnyPublisher()
             }
-        
-        // Update workout count
-        rawWorkouts
             .receive(on: DispatchQueue.main)
             .sink(
-                receiveCompletion: { _ in },
+                receiveCompletion: { workouts in
+                    unprocessedWorkouts.send(completion: .finished)
+                },
                 receiveValue: { [weak self] workouts in
+                    for workout in workouts {
+                        unprocessedWorkouts.send(workout)
+                    }
+                    // IMPORTANT: Update the total number of workouts so we can show loading spinner
                     self?.totalWorkoutsCount = workouts.count
                 }
             )
             .store(in: &cancellables)
         
         // Process workouts
-        rawWorkouts
-            .flatMap { workouts in
-                Publishers.MergeMany(
-                    workouts.map { self.details(workout: $0) }
-                ).collect(15) // batch updates
-            }
+        unprocessedWorkouts
+            .flatMap { self.details(workout: $0) }
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { _ in },
-                receiveValue: { [weak self] workouts in
-                    self?.retrievedWorkouts.append(contentsOf: workouts)
+                receiveValue: { [weak self] workout in
+                    self?.retrievedWorkouts.append(workout)
                 }
             )
             .store(in: &cancellables)
