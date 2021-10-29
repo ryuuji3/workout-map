@@ -31,28 +31,19 @@ struct WorkoutMap: UIViewRepresentable {
             }
         )
         
-        let walkingRoutes = workouts
-            .filter { workout in
-                workout.type == .walking
+        // Each polyline group will have a different color
+        WorkoutType.allCases
+            .map { workoutType in
+                createPolylines(
+                    for: workouts.filter { workout in
+                        workout.type == workoutType
+                    },
+                    color: workoutType.color
+                )
             }
-        let runningRoutes = workouts
-            .filter { workout in
-                workout.type == .running
+            .forEach { lines in
+                map.addOverlay(lines)
             }
-        let cyclingRoutes = workouts
-            .filter { workout in
-                workout.type == .cycling
-            }
-        
-        map.addOverlay(
-            createPolylines(for: walkingRoutes, color: WorkoutType.walking.color)
-        )
-        map.addOverlay(
-            createPolylines(for: runningRoutes, color: WorkoutType.running.color)
-        )
-        map.addOverlay(
-            createPolylines(for: cyclingRoutes, color: WorkoutType.cycling.color)
-        )
     }
     
     private func createPolylines(for workouts: [Workout], color: Color) -> RoutePolylines {

@@ -29,4 +29,12 @@ public class Workout: Identifiable {
         self.type = type
         self.route = route
     }
+    
+    var totalDistance: CLLocationDistance {
+        if let firstCoordinate = route.first, let lastCoordinate = route.last {
+            return firstCoordinate.distance(from: lastCoordinate)
+        }
+        
+        return CLLocationDistance(0)
+    }
 }

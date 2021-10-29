@@ -26,6 +26,16 @@ class WorkoutManager: NSObject, ObservableObject {
     @Published var totalWorkoutsCount: Int = 0
     @Published var retrievedWorkouts: [Workout] = []
     
+    var isLoading: Bool {
+        retrievedWorkouts.count != totalWorkoutsCount
+    }
+    
+    var totalDistance: CLLocationDistance {
+        self.retrievedWorkouts.reduce(0) { totalDistance, workout in
+            totalDistance + workout.totalDistance
+        }
+    }
+    
     private var cancellables: Set<AnyCancellable> = []
     
     func getWorkouts(requestedTypes: Set<WorkoutType> = workoutTypes) {

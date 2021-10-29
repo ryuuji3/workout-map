@@ -2,6 +2,8 @@ import SwiftUI
 import MapKit
 import HealthKit
 
+private let distanceFormatter = MKDistanceFormatter()
+
 struct MapView: View {
     @EnvironmentObject var workoutManager: WorkoutManager
    
@@ -20,6 +22,7 @@ struct MapView: View {
     var body: some View {
         let workouts = workoutManager.retrievedWorkouts
         let progress: Double = Double(workouts.count) / Double(workoutManager.totalWorkoutsCount)
+        let totalDistance: String = distanceFormatter.string(fromDistance: workoutManager.totalDistance)
         
         ZStack {
             WorkoutMap(
@@ -42,7 +45,21 @@ struct MapView: View {
             
             VStack {
                 Spacer()
-                WorkoutTypeLegend(loadedWorkoutTypes: Array(selectedWorkoutTypes))
+                
+                VStack {
+                    HStack {
+                        Text("Total distance:")
+                            .padding(.trailing, 10)
+                        
+                        if workoutManager.isLoading {
+                            ProgressView().progressViewStyle(.circular)
+                        } else {
+                            Text(totalDistance)
+                        }
+                    }.padding()
+                    
+                    WorkoutTypeLegend(loadedWorkoutTypes: Array(selectedWorkoutTypes))
+                }
             }
         }
     }

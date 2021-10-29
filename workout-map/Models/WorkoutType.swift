@@ -10,7 +10,7 @@ import HealthKit
 import SwiftUI
 
 
-public enum WorkoutType: Identifiable, Hashable {
+public enum WorkoutType: Identifiable, Hashable, CaseIterable {
     case walking
     case running
     case cycling
