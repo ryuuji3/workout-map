@@ -10,6 +10,7 @@
 		8F496E9E2725C9C5000197E5 /* LoadingSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F496E9D2725C9C5000197E5 /* LoadingSpinner.swift */; };
 		8F496EA02725EF8F000197E5 /* WorkoutTypeLegend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F496E9F2725EF8F000197E5 /* WorkoutTypeLegend.swift */; };
 		8F496EA22725F2D6000197E5 /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F496EA12725F2D6000197E5 /* WorkoutType.swift */; };
+		8F496EA427262003000197E5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F496EA327262003000197E5 /* LocationManager.swift */; };
 		8F53C67D2714A77E00AF500D /* workout_mapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F53C67C2714A77E00AF500D /* workout_mapApp.swift */; };
 		8F53C6812714A77F00AF500D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F53C6802714A77F00AF500D /* Assets.xcassets */; };
 		8F53C6842714A77F00AF500D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F53C6832714A77F00AF500D /* Preview Assets.xcassets */; };
@@ -25,6 +26,7 @@
 		8F496E9D2725C9C5000197E5 /* LoadingSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingSpinner.swift; sourceTree = "<group>"; };
 		8F496E9F2725EF8F000197E5 /* WorkoutTypeLegend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTypeLegend.swift; sourceTree = "<group>"; };
 		8F496EA12725F2D6000197E5 /* WorkoutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutType.swift; sourceTree = "<group>"; };
+		8F496EA327262003000197E5 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		8F53C6792714A77E00AF500D /* workout-map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "workout-map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F53C67C2714A77E00AF500D /* workout_mapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = workout_mapApp.swift; sourceTree = "<group>"; };
 		8F53C6802714A77F00AF500D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 				8F53C67C2714A77E00AF500D /* workout_mapApp.swift */,
 				8F53C6802714A77F00AF500D /* Assets.xcassets */,
 				8F53C6822714A77F00AF500D /* Preview Content */,
+				8F496EA327262003000197E5 /* LocationManager.swift */,
 			);
 			path = "workout-map";
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 				8F53C67D2714A77E00AF500D /* workout_mapApp.swift in Sources */,
 				8F496E9E2725C9C5000197E5 /* LoadingSpinner.swift in Sources */,
 				8F611CA1271CA854009853D1 /* WorkoutManager.swift in Sources */,
+				8F496EA427262003000197E5 /* LocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,17 +1,19 @@
 import SwiftUI
 import MapKit
 import HealthKit
+import os
 
 private let distanceFormatter = MKDistanceFormatter()
 
 struct MapView: View {
     @EnvironmentObject var workoutManager: WorkoutManager
+    @EnvironmentObject var locationManager: LocationManager
    
     @State private var selectedWorkoutTypes: Set<WorkoutType> = [.cycling, .walking, .running]
     @State private var currentRegion = MKCoordinateRegion(
         center: CLLocationCoordinate2D(
-            latitude: 44.643324,
-            longitude: -63.713239
+            latitude: 37.3230,
+            longitude: -122.0322
         ),
         span: MKCoordinateSpan(
             latitudeDelta: 0.1,
@@ -30,6 +32,22 @@ struct MapView: View {
                 workouts: workouts
             )
                 .edgesIgnoringSafeArea(.all)
+                .onChange(of: locationManager.currentLocation) { location in
+                    withAnimation {
+                        if let newLocation = location {
+                            self.currentRegion = MKCoordinateRegion(
+                                center: newLocation.coordinate,
+                                span: MKCoordinateSpan(
+                                    latitudeDelta: 0.1,
+                                    longitudeDelta: 0.1
+                                )
+                            )
+                        }
+                    }
+                }
+                .onAppear {
+                    locationManager.getLocation()
+                }
                 .onAppear {
                     workoutManager.getWorkouts(
                         requestedTypes: selectedWorkoutTypes
@@ -69,5 +87,6 @@ struct MapView_Previews: PreviewProvider {
     static var previews: some View {
         MapView()
             .environmentObject(WorkoutManager())
+            .environmentObject(LocationManager())
     }
 }

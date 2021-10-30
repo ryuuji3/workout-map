@@ -14,15 +14,14 @@ struct WorkoutMap: UIViewRepresentable {
     var workouts: [Workout]
     
     func makeUIView(context: Context) -> MKMapView {
-        let map = MKMapView(frame: .zero)
-        
-        map.setRegion(currentRegion, animated: true)
-        
-        return map
+        MKMapView(frame: .zero)
     }
     
     func updateUIView(_ map: MKMapView, context: Context) {
         map.delegate = context.coordinator
+        
+        // Reset location if its changed
+        map.setRegion(currentRegion, animated: true)
         
         // Clear all drawn lines before drawing
         map.removeOverlays(
