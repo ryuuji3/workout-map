@@ -69,14 +69,32 @@ struct MapView: View {
                         Text("Total distance:")
                             .padding(.trailing, 10)
                         
-                        if workoutManager.isLoading {
-                            ProgressView().progressViewStyle(.circular)
-                        } else {
+                        LoadingView(isLoading: workoutManager.isLoading) {
                             Text(totalDistance)
                         }
                     }.padding()
                     
-                    WorkoutTypeLegend(loadedWorkoutTypes: Array(selectedWorkoutTypes))
+                    VStack {
+                        ForEach(Array(selectedWorkoutTypes)) { workoutType in
+                            let distanceForType = distanceFormatter.string(
+                                fromDistance: workoutManager.totalDistanceByType(type: workoutType)
+                            )
+                            
+                            HStack {
+                                Group {
+                                    Image(systemName: workoutType.logo)
+                                    Text(workoutType.name)
+                                        .padding(.trailing, 33)
+                                }
+                                
+                                LoadingView(isLoading: workoutManager.isLoading) {
+                                    Text(distanceForType)
+                                }
+                            }
+                                .foregroundColor(workoutType.color)
+                                .padding(.top, 1)
+                        }
+                    }
                 }
             }
         }

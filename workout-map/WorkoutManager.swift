@@ -30,10 +30,20 @@ class WorkoutManager: NSObject, ObservableObject {
         retrievedWorkouts.count != totalWorkoutsCount
     }
     
-    var totalDistance: CLLocationDistance {
-        self.retrievedWorkouts.reduce(0) { totalDistance, workout in
+    private func distanceForWorkouts(workouts: [Workout]) -> CLLocationDistance {
+        workouts.reduce(0) { totalDistance, workout in
             totalDistance + workout.totalDistance
         }
+    }
+    
+    var totalDistance: CLLocationDistance {
+        distanceForWorkouts(workouts: retrievedWorkouts)
+    }
+    
+    func totalDistanceByType(type: WorkoutType) -> CLLocationDistance {
+        let workoutsByType = self.retrievedWorkouts.filter { $0.type == type }
+        
+        return distanceForWorkouts(workouts: workoutsByType)
     }
     
     private var cancellables: Set<AnyCancellable> = []
