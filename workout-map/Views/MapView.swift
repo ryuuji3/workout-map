@@ -42,16 +42,12 @@ struct MapView: View {
                                     longitudeDelta: 0.1
                                 )
                             )
+                            workoutManager.getWorkouts() // start querying workouts AFTER location is determined
                         }
                     }
                 }
                 .onAppear {
                     locationManager.getLocation()
-                }
-                .onAppear {
-                    workoutManager.getWorkouts(
-                        requestedTypes: selectedWorkoutTypes
-                    )
                 }
             
             // TODO: Add animation 

@@ -76,6 +76,7 @@
 			children = (
 				8FBA5E0D2720E6D000F775B4 /* Components */,
 				8F611CA0271CA854009853D1 /* WorkoutManager.swift */,
+				8F496EA327262003000197E5 /* LocationManager.swift */,
 				8F53C6982714B2E200AF500D /* Models */,
 				8F53C68F2714A7AF00AF500D /* Info.plist */,
 				8F53C68B2714A7A400AF500D /* workout-map.entitlements */,
@@ -83,7 +84,6 @@
 				8F53C67C2714A77E00AF500D /* workout_mapApp.swift */,
 				8F53C6802714A77F00AF500D /* Assets.xcassets */,
 				8F53C6822714A77F00AF500D /* Preview Content */,
-				8F496EA327262003000197E5 /* LocationManager.swift */,
 			);
 			path = "workout-map";
 			sourceTree = "<group>";

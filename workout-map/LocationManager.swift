@@ -25,6 +25,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         super.init()
         
         locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -52,6 +53,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let lastLocation = locationManager.location {
             self.currentLocation = lastLocation
+            logger.log("Location received! Stopping location service.")
             
             locationManager.stopUpdatingLocation()
         }

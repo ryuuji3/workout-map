@@ -48,7 +48,7 @@ class WorkoutManager: NSObject, ObservableObject {
     
     private var cancellables: Set<AnyCancellable> = []
     
-    func getWorkouts(requestedTypes: Set<WorkoutType> = workoutTypes) {
+    func getWorkouts() {
         let unprocessedWorkouts = PassthroughSubject<HKWorkout, Never>()
         
         // Immediately load workouts and queue for processing
@@ -61,7 +61,7 @@ class WorkoutManager: NSObject, ObservableObject {
                 }
                 
                 return self
-                    .workouts(requestedTypes: requestedTypes)
+                    .workouts()
                     .collect() // Fetch all workouts so that we can batch fetching routes + locations
                     .eraseToAnyPublisher()
             }
@@ -71,11 +71,13 @@ class WorkoutManager: NSObject, ObservableObject {
                     unprocessedWorkouts.send(completion: .finished)
                 },
                 receiveValue: { [weak self] workouts in
+                    logger.log("Setting total number of workouts to \(workouts.count)")
+                    // IMPORTANT: Update the total number of workouts so we can show loading spinner
+                    self?.totalWorkoutsCount = workouts.count
+                    
                     for workout in workouts {
                         unprocessedWorkouts.send(workout)
                     }
-                    // IMPORTANT: Update the total number of workouts so we can show loading spinner
-                    self?.totalWorkoutsCount = workouts.count
                 }
             )
             .store(in: &cancellables)
@@ -93,11 +95,11 @@ class WorkoutManager: NSObject, ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func workouts(requestedTypes: Set<WorkoutType>) -> PassthroughSubject<HKWorkout, Error> {
+    private func workouts() -> PassthroughSubject<HKWorkout, Error> {
         let subject = PassthroughSubject<HKWorkout, Error>()
         
         let workoutByType = NSCompoundPredicate(
-            orPredicateWithSubpredicates: requestedTypes.map { HKQuery.predicateForWorkouts(with: HKWorkoutActivityType($0)) }
+            orPredicateWithSubpredicates: WorkoutManager.workoutTypes.map { HKQuery.predicateForWorkouts(with: HKWorkoutActivityType($0)) }
         )
         let query = HKSampleQuery(
             sampleType: HKSampleType.workoutType(),
