@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F3DCFE6273B2D5000272FD5 /* Legend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F3DCFE5273B2D5000272FD5 /* Legend.swift */; };
 		8F496E9E2725C9C5000197E5 /* LoadingSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F496E9D2725C9C5000197E5 /* LoadingSpinner.swift */; };
 		8F496EA22725F2D6000197E5 /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F496EA12725F2D6000197E5 /* WorkoutType.swift */; };
 		8F496EA427262003000197E5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F496EA327262003000197E5 /* LocationManager.swift */; };
@@ -19,10 +20,11 @@
 		8F53C69A2714B2EF00AF500D /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F53C6992714B2EF00AF500D /* Workout.swift */; };
 		8F611CA1271CA854009853D1 /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F611CA0271CA854009853D1 /* WorkoutManager.swift */; };
 		8FBA5E0F2720E70300F775B4 /* WorkoutMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBA5E0E2720E70300F775B4 /* WorkoutMap.swift */; };
-		8FBFBAFD272DCA3F006F8D9E /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBFBAFC272DCA3F006F8D9E /* LoadingView.swift */; };
+		8FBFBAFD272DCA3F006F8D9E /* LabeledCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBFBAFC272DCA3F006F8D9E /* LabeledCalculation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8F3DCFE5273B2D5000272FD5 /* Legend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Legend.swift; sourceTree = "<group>"; };
 		8F496E9D2725C9C5000197E5 /* LoadingSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingSpinner.swift; sourceTree = "<group>"; };
 		8F496EA12725F2D6000197E5 /* WorkoutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutType.swift; sourceTree = "<group>"; };
 		8F496EA327262003000197E5 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
@@ -38,7 +40,7 @@
 		8F53C6992714B2EF00AF500D /* Workout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workout.swift; sourceTree = "<group>"; };
 		8F611CA0271CA854009853D1 /* WorkoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
 		8FBA5E0E2720E70300F775B4 /* WorkoutMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutMap.swift; sourceTree = "<group>"; };
-		8FBFBAFC272DCA3F006F8D9E /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		8FBFBAFC272DCA3F006F8D9E /* LabeledCalculation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledCalculation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,9 +127,10 @@
 		8FBA5E0D2720E6D000F775B4 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				8FBFBAFC272DCA3F006F8D9E /* LoadingView.swift */,
+				8FBFBAFC272DCA3F006F8D9E /* LabeledCalculation.swift */,
 				8FBA5E0E2720E70300F775B4 /* WorkoutMap.swift */,
 				8F496E9D2725C9C5000197E5 /* LoadingSpinner.swift */,
+				8F3DCFE5273B2D5000272FD5 /* Legend.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -230,7 +233,8 @@
 				8F53C69A2714B2EF00AF500D /* Workout.swift in Sources */,
 				8F53C67D2714A77E00AF500D /* workout_mapApp.swift in Sources */,
 				8F496E9E2725C9C5000197E5 /* LoadingSpinner.swift in Sources */,
-				8FBFBAFD272DCA3F006F8D9E /* LoadingView.swift in Sources */,
+				8F3DCFE6273B2D5000272FD5 /* Legend.swift in Sources */,
+				8FBFBAFD272DCA3F006F8D9E /* LabeledCalculation.swift in Sources */,
 				8F611CA1271CA854009853D1 /* WorkoutManager.swift in Sources */,
 				8F496EA427262003000197E5 /* LocationManager.swift in Sources */,
 			);

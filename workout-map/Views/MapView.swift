@@ -22,9 +22,9 @@ struct MapView: View {
     )
     
     var body: some View {
-        let workouts = workoutManager.retrievedWorkouts
-        let progress: Double = Double(workouts.count) / Double(workoutManager.totalWorkoutsCount)
-        let totalDistance: String = distanceFormatter.string(fromDistance: workoutManager.totalDistance)
+        let workouts = workoutManager.retrievedWorkouts.filter {
+            selectedWorkoutTypes.contains($0.type)
+        }
         
         ZStack {
             WorkoutMap(
@@ -51,48 +51,16 @@ struct MapView: View {
                 }
             
             // TODO: Add animation 
-            if progress < 1 {
+            if workoutManager.progress < 1 {
                 LoadingSpinner(
-                    progress: progress
+                    progress: workoutManager.progress
                 )
             }
             
-            VStack {
-                Spacer()
-                
-                VStack {
-                    HStack {
-                        Text("Total distance:")
-                            .padding(.trailing, 10)
-                        
-                        LoadingView(isLoading: workoutManager.isLoading) {
-                            Text(totalDistance)
-                        }
-                    }.padding()
-                    
-                    VStack {
-                        ForEach(Array(selectedWorkoutTypes)) { workoutType in
-                            let distanceForType = distanceFormatter.string(
-                                fromDistance: workoutManager.totalDistanceByType(type: workoutType)
-                            )
-                            
-                            HStack {
-                                Group {
-                                    Image(systemName: workoutType.logo)
-                                    Text(workoutType.name)
-                                        .padding(.trailing, 33)
-                                }
-                                
-                                LoadingView(isLoading: workoutManager.isLoading) {
-                                    Text(distanceForType)
-                                }
-                            }
-                                .foregroundColor(workoutType.color)
-                                .padding(.top, 1)
-                        }
-                    }
-                }
-            }
+            WorkoutTypeFilter(
+                selectedWorkoutTypes: $selectedWorkoutTypes
+            )
+            
         }
     }
 }
@@ -102,5 +70,68 @@ struct MapView_Previews: PreviewProvider {
         MapView()
             .environmentObject(WorkoutManager())
             .environmentObject(LocationManager())
+    }
+}
+
+// TODO: Refactor into a dumb component
+struct WorkoutTypeFilter: View {
+    @EnvironmentObject var workoutManager: WorkoutManager
+    @Binding var selectedWorkoutTypes: Set<WorkoutType>
+    
+    var body: some View {
+        let totalDistance: String = distanceFormatter.string(fromDistance: workoutManager.totalDistance)
+        
+        Legend {
+            LabeledCalculation(
+                isLoading: workoutManager.isLoading,
+                label: {
+                    Text("Total distance:")
+                },
+                result: {
+                    Text(totalDistance)
+                }
+            )
+            
+            VStack {
+                let workoutTypes: [WorkoutType] = [ .walking, .running, .cycling ]
+                
+                ForEach(workoutTypes, id: \.self) { workoutType in
+                    let distanceForType = distanceFormatter.string(
+                        fromDistance: workoutManager.totalDistanceByType(type: workoutType)
+                    )
+                    let isSelected = selectedWorkoutTypes.contains(workoutType)
+                    
+                    ZStack {
+                        HStack {
+                            LabeledCalculation(
+                                isLoading: workoutManager.isLoading,
+                                label: {
+                                    Group {
+                                        if let logo = workoutType.logo {
+                                            Image(systemName: logo)
+                                        }
+                                        Text(workoutType.name)
+                                            .padding(.trailing, 33)
+                                    }
+                                },
+                                result: {
+                                    Text(distanceForType)
+                                }
+                            )
+                        }
+                        .foregroundColor(isSelected ? Color.white : workoutType.color)
+                        .background(isSelected ? workoutType.color : Color.black.opacity(0.4))
+                        .padding(.bottom, 1)
+                        .onTapGesture {
+                            if isSelected {
+                                self.selectedWorkoutTypes.remove(workoutType)
+                            } else {
+                                self.selectedWorkoutTypes.insert(workoutType)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import os
 
 // Apparently you can't overlay with SwiftUI2 
 struct WorkoutMap: UIViewRepresentable {

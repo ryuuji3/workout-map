@@ -46,6 +46,10 @@ class WorkoutManager: NSObject, ObservableObject {
         return distanceForWorkouts(workouts: workoutsByType)
     }
     
+    var progress: Double {
+        Double(retrievedWorkouts.count) / Double(totalWorkoutsCount)
+    }
+    
     private var cancellables: Set<AnyCancellable> = []
     
     func getWorkouts() {

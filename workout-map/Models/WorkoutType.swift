@@ -33,7 +33,7 @@ public enum WorkoutType: Identifiable, Hashable, CaseIterable {
         }
     }
     
-    var logo: String {
+    var logo: String? {
         switch self {
             case .running:
                 return "figure.walk" // TODO: Find a better one
@@ -41,7 +41,7 @@ public enum WorkoutType: Identifiable, Hashable, CaseIterable {
                 return "figure.walk"
             case .cycling:
                 return "bicycle"
-            default: return "" // no symbol
+            default: return nil // no symbol
         }
     }
     
@@ -53,7 +53,8 @@ public enum WorkoutType: Identifiable, Hashable, CaseIterable {
                 return .blue
             case .cycling:
                 return .green
-            default: return .black
+            default:
+                return .black
         }
     }
     
